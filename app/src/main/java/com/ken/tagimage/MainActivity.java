@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         tagInfoBeanList.add(createTag2());
         tagInfoBeanList.add(createTag3());
 
+        //设置 图片的高度  可根据实际的图片高度比例  设置
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, imageH);
         findViewById(R.id.image).setLayoutParams(params);
 
@@ -168,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
         // 显示控件的显示 依照图片的本身的宽高比例进行动态设置
         bean.setWidth(Density.getScreenW(this));
         imageH = 0;
-        //项目中需求是只有1：1  和  3：4的比例   这个可根据实际修改   直接按图片比例也可以
+        //计算图片的高度   因为项目中需求是图片只有1：1  和  3：4的比例   这个可根据实际修改   直接按图片比例也可以
         if (bean.getPicWidth() / bean.getPicHeight() > 0.85f) {
             imageH = (int) bean.getWidth();
         } else {

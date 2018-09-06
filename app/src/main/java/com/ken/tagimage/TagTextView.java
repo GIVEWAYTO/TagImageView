@@ -34,7 +34,7 @@ public class TagTextView extends View {
     private int lineLong = 0; //横线的长度
     private RectF mTextRoundRect;   //文字框内容高度
     private String textContent;    //文本内容
-    private final int TextMaxNum = 16;
+    private final int TextMaxNum = 16;  //文本最多显示16个文字
     private GestureDetectorCompat mGestureDetector;
 
     private float mStokeHeight;  //边框的高度
@@ -44,9 +44,6 @@ public class TagTextView extends View {
     private float mTextX;     //文字起始x
     private float mTextY;    //文字baseline的高度
     private int mRoundX;
-
-    private int viewX; //控件左上角的x   实际x
-    private int viewY; //控件左上角的y   实际y
 
     private float mFirstDownX;
     private float mFirstDownY;
@@ -166,14 +163,14 @@ public class TagTextView extends View {
         int iconHeight = bounds.bottom - bounds.top;
         mIconWidth = iconHeight;
 
-        mTypeIconRect.set(viewX + lineLong + mRadius + leftPadding, mTopPadding, viewX + lineLong + mRadius + mIconWidth + leftPadding, mTopPadding + iconHeight);
+        mTypeIconRect.set(lineLong + mRadius + leftPadding, mTopPadding, lineLong + mRadius + mIconWidth + leftPadding, mTopPadding + iconHeight);
 
         //获得边框的宽高
         mStokeHeight = bounds.bottom - bounds.top + mTopPadding * 2;
         mStokeWidth = bounds.right - bounds.left + leftPadding * 2 + mIconWidth;
 
 
-        mTextRoundRect.set(viewX + lineLong + mRadius, viewY, viewX + lineLong + mRadius + mStokeWidth, viewY + mStokeHeight);
+        mTextRoundRect.set(lineLong + mRadius, 0, lineLong + mRadius + mStokeWidth, 0 + mStokeHeight);
         //边框圆角半径
         mRoundX = Density.sp2px(getContext(), 100);
 
@@ -181,16 +178,16 @@ public class TagTextView extends View {
         mCircleY = mStokeHeight / 2;
 
         //文字起始x
-        mTextX = viewX + lineLong + mRadius + leftPadding + mIconWidth;
+        mTextX = lineLong + mRadius + leftPadding + mIconWidth;
 
         //文字y
         Paint.FontMetricsInt fontMetrics = ovalPaint.getFontMetricsInt();
-        mTextY = viewY + (mTextRoundRect.top + mTextRoundRect.bottom - fontMetrics.bottom -
+        mTextY = (mTextRoundRect.top + mTextRoundRect.bottom - fontMetrics.bottom -
                 fontMetrics.top) / 2;
 
         //整个的控件的位置
         mCenterRect = new RectF();
-        mCenterRect.set(viewX, viewY, mRadius + lineLong + mStokeWidth, mStokeHeight);
+        mCenterRect.set(0, 0, mRadius + lineLong + mStokeWidth, mStokeHeight);
 
         mGestureDetector = new GestureDetectorCompat(context, mGestureListener);
 
@@ -199,7 +196,7 @@ public class TagTextView extends View {
 
         bottomBorder = parentHeight;
 
-        //删除控件的半径
+        //删除--控件的半径
         int delet_raduis = Density.dip2px(context, 15);
         float top = parentHeight - Density.dip2px(context, 80) - mStokeHeight / 2;
 
@@ -230,14 +227,14 @@ public class TagTextView extends View {
 
         ovalPaint.setColor(mShadeColor);
         if (isLeft) {
-            canvas.drawCircle(mRadius + viewX, mCircleY + viewY, mRadius, ovalPaint);
-            mTextRoundRect.set(viewX + lineLong + mRadius, viewY, viewX + lineLong + mRadius + mStokeWidth, viewY + mStokeHeight);
+            canvas.drawCircle(mRadius, mCircleY , mRadius, ovalPaint);
+            mTextRoundRect.set(lineLong + mRadius, 0, lineLong + mRadius + mStokeWidth,  mStokeHeight);
             //画边框遮罩
             canvas.drawRoundRect(mTextRoundRect, mRoundX, mRoundX, ovalPaint);
         } else {
-            mTextRoundRect.set(viewX, viewY, viewX + mStokeWidth, viewY + mStokeHeight);
+            mTextRoundRect.set(0, 0, mStokeWidth,  mStokeHeight);
 
-            canvas.drawCircle(viewX + mStokeWidth + lineLong, mCircleY + viewY, mRadius, ovalPaint);
+            canvas.drawCircle(mStokeWidth + lineLong, mCircleY , mRadius, ovalPaint);
             //画边框遮罩
             canvas.drawRoundRect(mTextRoundRect, mRoundX, mRoundX, ovalPaint);
         }
@@ -245,21 +242,21 @@ public class TagTextView extends View {
         //绘制内圆
         ovalPaint.setColor(Color.WHITE);
         if (isLeft) {
-            canvas.drawCircle(mRadius + viewX, mCircleY + viewY, mInnerRadius, ovalPaint);
+            canvas.drawCircle(mRadius, mCircleY , mInnerRadius, ovalPaint);
 
             //画线
-            canvas.drawLine(viewX + mRadius, viewY + mStokeHeight / 2, viewX + lineLong + mRadius, viewY + mStokeHeight / 2, ovalPaint);
+            canvas.drawLine(mRadius,  mStokeHeight / 2, lineLong + mRadius,  mStokeHeight / 2, ovalPaint);
 
-            mTypeIconRect.set(viewX + lineLong + mRadius + leftPadding, mTopPadding, viewX + lineLong + mRadius + mIconWidth + leftPadding, mTopPadding + mIconWidth);
+            mTypeIconRect.set(lineLong + mRadius + leftPadding, mTopPadding, lineLong + mRadius + mIconWidth + leftPadding, mTopPadding + mIconWidth);
             //画标签类型icon
             canvas.drawBitmap(mBitmap, null, mTypeIconRect, ovalPaint);
 
             //文字起始x
-            mTextX = viewX + lineLong + mRadius + leftPadding + mIconWidth;
+            mTextX = lineLong + mRadius + leftPadding + mIconWidth;
 
             //文字y
             Paint.FontMetricsInt fontMetrics = ovalPaint.getFontMetricsInt();
-            mTextY = viewY + (mTextRoundRect.top + mTextRoundRect.bottom - fontMetrics.bottom -
+            mTextY =  (mTextRoundRect.top + mTextRoundRect.bottom - fontMetrics.bottom -
                     fontMetrics.top) / 2;
             canvas.drawText(textContent, mTextX, mTextY, ovalPaint);
 
@@ -268,20 +265,20 @@ public class TagTextView extends View {
             canvas.drawRoundRect(mTextRoundRect, mRoundX, mRoundX, ovalPaint);
 
         } else {
-            canvas.drawCircle(viewX + mStokeWidth + lineLong, mCircleY + viewY, mInnerRadius, ovalPaint);
+            canvas.drawCircle(mStokeWidth + lineLong, mCircleY , mInnerRadius, ovalPaint);
 
-            mTypeIconRect.set(viewX + leftPadding, mTopPadding, viewX + mIconWidth + leftPadding, mTopPadding + mIconWidth);
+            mTypeIconRect.set(leftPadding, mTopPadding, mIconWidth + leftPadding, mTopPadding + mIconWidth);
             //画标签类型icon
             canvas.drawBitmap(mBitmap, null, mTypeIconRect, ovalPaint);
 
             //画线
-            canvas.drawLine(viewX + mStokeWidth, viewY + mStokeHeight / 2, viewX + mStokeWidth + lineLong, viewY + mStokeHeight / 2, ovalPaint);
+            canvas.drawLine(mStokeWidth,  mStokeHeight / 2, mStokeWidth + lineLong,  mStokeHeight / 2, ovalPaint);
 
             //文字
-            mTextX = viewX + leftPadding + mIconWidth;
+            mTextX = leftPadding + mIconWidth;
             //文字y
             Paint.FontMetricsInt fontMetrics = ovalPaint.getFontMetricsInt();
-            mTextY = viewY + (mTextRoundRect.top + mTextRoundRect.bottom - fontMetrics.bottom -
+            mTextY =  (mTextRoundRect.top + mTextRoundRect.bottom - fontMetrics.bottom -
                     fontMetrics.top) / 2;
             canvas.drawText(textContent, mTextX, mTextY, ovalPaint);
 
