@@ -3,6 +3,8 @@ package com.ken.tagimage;
 /**
  * 作者: by KEN on 2018/7/14 17.
  * 邮箱: gr201655@163.com
+ *
+ * 由于项目为统一跟后台定义字段相同  有部分命名不准确
  */
 
 
@@ -131,5 +133,24 @@ public class TagInfoBean {
 
     public int getIndex() {
         return mIndex;
+    }
+
+    @Override
+    public String toString() {
+        return "TagInfoBean{" +
+                "name='" + name + '\'' +
+                ", notesTagType=" + notesTagType +
+                ", url='" + url + '\'' +
+                ", x=" + x +
+                ", y=" + y +
+                ", width=" + width +
+                ", height=" + height +
+                ", picWidth=" + picWidth +
+                ", picHeight=" + picHeight +
+                ", notesTagId=" + notesTagId +
+                ", isLeft=" + isLeft +
+                ", isCanMove=" + isCanMove +
+                ", mIndex=" + mIndex +
+                '}';
     }
 }

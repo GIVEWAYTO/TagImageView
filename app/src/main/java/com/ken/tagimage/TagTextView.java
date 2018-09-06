@@ -12,6 +12,7 @@ import android.graphics.RectF;
 import android.support.v4.view.GestureDetectorCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -46,6 +47,7 @@ public class TagTextView extends View {
 
     private int viewX; //控件左上角的x   实际x
     private int viewY; //控件左上角的y   实际y
+
     private float mFirstDownX;
     private float mFirstDownY;
 
@@ -84,7 +86,7 @@ public class TagTextView extends View {
     private PaintFlagsDrawFilter pfd;
 
     public TagInfoBean getTagInfoBean() {
-        if(isMoveXY){
+        if (isMoveXY) {
             mTagInfoBean.setX(percentX);
             mTagInfoBean.setY(percentY);
         }
@@ -127,28 +129,27 @@ public class TagTextView extends View {
                 mBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.tags_location, opts);
                 break;
             case TAG_BRAND:
-                mBitmap = BitmapFactory.decodeResource(getResources(),R.mipmap.brand, opts);
+                mBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.brand, opts);
                 break;
             case TAG_PRICE:
-                mBitmap = BitmapFactory.decodeResource(getResources(),R.mipmap.price, opts);
+                mBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.price, opts);
                 break;
             default:
-                mBitmap = BitmapFactory.decodeResource(getResources(),R.mipmap.tags_text, opts);
+                mBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.tags_text, opts);
                 break;
         }
         //防止bitmap 变模糊
         ovalPaint.setFilterBitmap(true);
-        pfd = new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG| Paint.FILTER_BITMAP_FLAG);
+        pfd = new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
         ovalPaint.setTextSize(Density.dip2px(context, 14));
         lineLong = Density.dip2px(context, 15);
         textContent = mTagInfoBean.getName();
         if (TextUtils.isEmpty(textContent)) return;
         if (textContent.length() > TextMaxNum) {
-            textContent = textContent.substring(0, TextMaxNum-1) + "...";
+            textContent = textContent.substring(0, TextMaxNum - 1) + "...";
         }
         mCanMove = mTagInfoBean.isCanMove();
         rightBorder = Density.getScreenW(context);
-
 
 
         //获取文本的宽高
@@ -165,7 +166,7 @@ public class TagTextView extends View {
         int iconHeight = bounds.bottom - bounds.top;
         mIconWidth = iconHeight;
 
-        mTypeIconRect.set(viewX+lineLong+mRadius + leftPadding,mTopPadding,viewX+lineLong+mRadius+ mIconWidth + leftPadding,mTopPadding+iconHeight);
+        mTypeIconRect.set(viewX + lineLong + mRadius + leftPadding, mTopPadding, viewX + lineLong + mRadius + mIconWidth + leftPadding, mTopPadding + iconHeight);
 
         //获得边框的宽高
         mStokeHeight = bounds.bottom - bounds.top + mTopPadding * 2;
@@ -180,7 +181,7 @@ public class TagTextView extends View {
         mCircleY = mStokeHeight / 2;
 
         //文字起始x
-        mTextX = viewX + lineLong + mRadius + leftPadding  + mIconWidth;
+        mTextX = viewX + lineLong + mRadius + leftPadding + mIconWidth;
 
         //文字y
         Paint.FontMetricsInt fontMetrics = ovalPaint.getFontMetricsInt();
@@ -202,8 +203,8 @@ public class TagTextView extends View {
         int delet_raduis = Density.dip2px(context, 15);
         float top = parentHeight - Density.dip2px(context, 80) - mStokeHeight / 2;
 
-        deleteRect = new RectF(rightBorder/2-(lineLong  + mStokeWidth + delet_raduis), top,
-                rightBorder/2+ delet_raduis,parentHeight - Density.dip2px(context,50) - mStokeHeight/2);
+        deleteRect = new RectF(rightBorder / 2 - (lineLong + mStokeWidth + delet_raduis), top,
+                rightBorder / 2 + delet_raduis, parentHeight - Density.dip2px(context, 50) - mStokeHeight / 2);
 
     }
 
@@ -249,12 +250,12 @@ public class TagTextView extends View {
             //画线
             canvas.drawLine(viewX + mRadius, viewY + mStokeHeight / 2, viewX + lineLong + mRadius, viewY + mStokeHeight / 2, ovalPaint);
 
-            mTypeIconRect.set(viewX+lineLong+mRadius + leftPadding,mTopPadding,viewX+lineLong+mRadius+ mIconWidth + leftPadding,mTopPadding+mIconWidth);
+            mTypeIconRect.set(viewX + lineLong + mRadius + leftPadding, mTopPadding, viewX + lineLong + mRadius + mIconWidth + leftPadding, mTopPadding + mIconWidth);
             //画标签类型icon
-            canvas.drawBitmap(mBitmap,null, mTypeIconRect,ovalPaint);
+            canvas.drawBitmap(mBitmap, null, mTypeIconRect, ovalPaint);
 
             //文字起始x
-            mTextX = viewX + lineLong + mRadius + leftPadding  + mIconWidth;
+            mTextX = viewX + lineLong + mRadius + leftPadding + mIconWidth;
 
             //文字y
             Paint.FontMetricsInt fontMetrics = ovalPaint.getFontMetricsInt();
@@ -269,9 +270,9 @@ public class TagTextView extends View {
         } else {
             canvas.drawCircle(viewX + mStokeWidth + lineLong, mCircleY + viewY, mInnerRadius, ovalPaint);
 
-            mTypeIconRect.set(viewX+leftPadding,mTopPadding,viewX+mIconWidth + leftPadding,mTopPadding+mIconWidth);
+            mTypeIconRect.set(viewX + leftPadding, mTopPadding, viewX + mIconWidth + leftPadding, mTopPadding + mIconWidth);
             //画标签类型icon
-            canvas.drawBitmap(mBitmap,null, mTypeIconRect,ovalPaint);
+            canvas.drawBitmap(mBitmap, null, mTypeIconRect, ovalPaint);
 
             //画线
             canvas.drawLine(viewX + mStokeWidth, viewY + mStokeHeight / 2, viewX + mStokeWidth + lineLong, viewY + mStokeHeight / 2, ovalPaint);
@@ -296,8 +297,8 @@ public class TagTextView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if(mCanMove && mTagGestureListener!=null && event.getAction() == MotionEvent.ACTION_UP){
-            mTagGestureListener.onUp(this,mTagInfoBean);
+        if (mCanMove && mTagGestureListener != null && event.getAction() == MotionEvent.ACTION_UP) {
+            mTagGestureListener.onUp(this, mTagInfoBean);
 
             float positionX = event.getRawX() - mFirstDownX - tempX;
             float positionY = event.getRawY() - mFirstDownY - tempY;
@@ -317,8 +318,8 @@ public class TagTextView extends View {
             }
 
             //处于删除区域
-            if(deleteRect.contains(positionX, positionY)){
-                mTagGestureListener.inDeleteRect(TagTextView.this,mTagInfoBean);
+            if (deleteRect.contains(positionX, positionY)) {
+                mTagGestureListener.inDeleteRect(TagTextView.this, mTagInfoBean);
             }
         }
         return mGestureDetector.onTouchEvent(event);
@@ -359,7 +360,8 @@ public class TagTextView extends View {
         @Override
         public boolean onDown(MotionEvent e) {
 
-            if(mCanMove && mTagGestureListener!=null)mTagGestureListener.onDown(TagTextView.this,mTagInfoBean);
+            if (mCanMove && mTagGestureListener != null)
+                mTagGestureListener.onDown(TagTextView.this, mTagInfoBean);
 
             mFirstDownX = e.getX();
             mFirstDownY = e.getY();
@@ -369,7 +371,6 @@ public class TagTextView extends View {
             tempY = e.getRawY() - e.getY() - TagTextView.this.getY();
             return mCenterRect.contains(e.getX(), e.getY()) || super.onDown(e);
         }
-
 
 
         @Override
@@ -382,9 +383,9 @@ public class TagTextView extends View {
                 //重新记录点的位置
                 meausePercent();
                 invalidate();
-            }else if (mTextRoundRect.contains(e.getX(), e.getY())) {
+            } else if (mTextRoundRect.contains(e.getX(), e.getY())) {
                 if (!mCanMove && mTagGestureListener != null) { // 不可编辑状态
-                    mTagGestureListener.clickTag(TagTextView.this,mTagInfoBean);
+                    mTagGestureListener.clickTag(TagTextView.this, mTagInfoBean);
                 }
             }
             return true;
@@ -414,8 +415,8 @@ public class TagTextView extends View {
 
                 TagTextView.this.setX(positionX);
                 TagTextView.this.setY(positionY);
-                if(mCanMove && mTagGestureListener !=null){
-                    mTagGestureListener.move(TagTextView.this,mTagInfoBean);
+                if (mCanMove && mTagGestureListener != null) {
+                    mTagGestureListener.move(TagTextView.this, mTagInfoBean);
 
                 }
                 isMoveXY = true;
@@ -461,6 +462,10 @@ public class TagTextView extends View {
 //        Log.e("zz", "meausePercent: parentx  ===  "+ getX() );
 //        Log.e("zz", "meausePercent: x == " + circleX + "  yy == " + circleY);
 //        Log.e("zz", "meausePercent: percentX == " + percentX + "   percentY == " + percentY);
+        Log.e("zz", "圆点相关数据");
+        Log.e("zz", "圆点坐标 x == "+ circleX+"  , y == " + circleY );
+        Log.e("zz", "圆点在图片上的坐标比例  x  == "+ percentX +"  , y == " + percentY );
+        Log.e("zz", "圆点数据："+ getTagInfoBean().toString() );
     }
 
 
