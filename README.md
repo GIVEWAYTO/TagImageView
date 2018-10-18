@@ -22,3 +22,31 @@
 * Log
 
 ![](log.jpg)
+
+## Bean
+
+    private String name;                  //标签内容
+
+    private int notesTagType;             //标签type
+  
+    private String url;                   //标签url
+
+    private double x;                     //圆心x的在父控件位置 %
+
+    private double y;                     //圆心y的在父控件位置 %
+
+    private float width;                  //控件宽度
+
+    private float height;                 //控件高度
+
+    private float picWidth;               //图片的宽度
+
+    private float picHeight;              //图片的高度
+
+    private int notesTagId;               //标签id
+
+    private boolean isLeft = true;        //圆点是否在左边
+
+    private boolean isCanMove = true;     //标签是否可以移动
+
+    private int index;                    //用来记录在编辑标签中的index 位置
