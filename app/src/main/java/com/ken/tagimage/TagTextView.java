@@ -61,7 +61,7 @@ public class TagTextView extends View {
     private float percentX = 0f;   //在父级的宽度占比
     private float percentY = 0f;   //在父级的高度占比
 
-    private boolean isLeft = true;
+    private boolean isLeft = true;  //圆点是否在左边
     private TagInfoBean mTagInfoBean;
     private int mShadeColor;
 
@@ -75,7 +75,6 @@ public class TagTextView extends View {
     private float tempX;   // 临时记录按键按下的位置
     private float tempY;
 
-    private int notesTagType = 0;  //标签类型
     private Bitmap mBitmap;
     private float mTopPadding;
     private RectF mTypeIconRect;
@@ -122,7 +121,6 @@ public class TagTextView extends View {
         mRadius = Density.dip2px(context, 4);
         mInnerRadius = Density.dip2px(context, 2.5f);
 
-        notesTagType = mTagInfoBean.getNotesTagType();
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
 
@@ -196,6 +194,7 @@ public class TagTextView extends View {
         mCenterRect = new RectF();
         mCenterRect.set(0, 0, mRadius + lineLong + mStokeWidth, mStokeHeight);
 
+        //手势监听
         mGestureDetector = new GestureDetectorCompat(context, mGestureListener);
 
         parentWidth = rightBorder;
@@ -235,6 +234,7 @@ public class TagTextView extends View {
         ovalPaint.setStyle(Paint.Style.FILL);
         ovalPaint.setColor(mShadeColor);
 
+        //原点在左边
         if (isLeft) {
             canvas.drawCircle(mRadius, mCircleY , mRadius, ovalPaint);
             mTextRoundRect.set(lineLong + mRadius, 0, lineLong + mRadius + mStokeWidth,  mStokeHeight);
@@ -482,7 +482,7 @@ public class TagTextView extends View {
         percentY = (((float) circleY) / parentHeight);
 
         Log.e("zz", "圆点相关数据");
-        Log.e("zz", "圆点坐标 x == "+ circleX+"  , y == " + circleY );
+        Log.e("zz", "圆点坐标 x == "+ circleX +"  , y == " + circleY );
         Log.e("zz", "圆点在图片上的坐标比例  x  == "+ percentX +"  , y == " + percentY );
         Log.e("zz", "圆点数据："+ getTagInfoBean().toString() );
     }
