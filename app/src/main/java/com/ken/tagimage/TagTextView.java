@@ -70,6 +70,11 @@ public class TagTextView extends View {
     public static final int TAG_BRAND = 2;  //品牌
     public static final int TAG_PRICE = 3; //价格
 
+    private boolean mCanMove = true; //可以被移动
+
+    private float tempX;   // 临时记录按键按下的位置
+    private float tempY;
+
     private int notesTagType = 0;  //标签类型
     private Bitmap mBitmap;
     private float mTopPadding;
@@ -137,6 +142,7 @@ public class TagTextView extends View {
         }
         //防止bitmap 变模糊
         ovalPaint.setFilterBitmap(true);
+        ovalPaint.setAntiAlias(true);
         pfd = new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
         ovalPaint.setTextSize(Density.dip2px(context, 14));
         lineLong = Density.dip2px(context, 15);
@@ -152,10 +158,12 @@ public class TagTextView extends View {
         //获取文本的宽高
         Rect bounds = new Rect();
         ovalPaint.getTextBounds(textContent, 0, textContent.length(), bounds);
+
         //边框与文字顶部底部的距离
         mTopPadding = Density.dip2px(context, 3);
         //边框与文字左右的距离
         leftPadding = Density.dip2px(context, 6);
+
         isLeft = mTagInfoBean.isLeft();
 
         //标签类别icon
@@ -169,8 +177,8 @@ public class TagTextView extends View {
         mStokeHeight = bounds.bottom - bounds.top + mTopPadding * 2;
         mStokeWidth = bounds.right - bounds.left + leftPadding * 2 + mIconWidth;
 
-
-        mTextRoundRect.set(lineLong + mRadius, 0, lineLong + mRadius + mStokeWidth, 0 + mStokeHeight);
+        //文字Rect的大小
+        mTextRoundRect.set(lineLong + mRadius, 0, lineLong + mRadius + mStokeWidth,  mStokeHeight);
 
 
         //圆心y
@@ -199,16 +207,13 @@ public class TagTextView extends View {
         int delet_raduis = Density.dip2px(context, 15);
         float top = parentHeight - Density.dip2px(context, 80) - mStokeHeight / 2;
 
+        //删除图标的大小
         deleteRect = new RectF(rightBorder / 2 - (lineLong + mStokeWidth + delet_raduis), top,
                 rightBorder / 2 + delet_raduis, parentHeight - Density.dip2px(context, 50) - mStokeHeight / 2);
 
     }
 
 
-    @Override
-    public boolean onGenericMotionEvent(MotionEvent event) {
-        return super.onGenericMotionEvent(event);
-    }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -226,12 +231,10 @@ public class TagTextView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-
-        ovalPaint.setAntiAlias(true);
         //绘制外圆
         ovalPaint.setStyle(Paint.Style.FILL);
-
         ovalPaint.setColor(mShadeColor);
+
         if (isLeft) {
             canvas.drawCircle(mRadius, mCircleY , mRadius, ovalPaint);
             mTextRoundRect.set(lineLong + mRadius, 0, lineLong + mRadius + mStokeWidth,  mStokeHeight);
@@ -247,6 +250,7 @@ public class TagTextView extends View {
         canvas.setDrawFilter(pfd);
         //绘制内圆
         ovalPaint.setColor(Color.WHITE);
+
         if (isLeft) {
             canvas.drawCircle(mRadius, mCircleY , mInnerRadius, ovalPaint);
 
@@ -329,20 +333,35 @@ public class TagTextView extends View {
 
     }
 
+
     public interface TagGestureListener {
-        // 手指按下
+        /**
+         *  手指按下
+         */
         void onDown(View view, TagInfoBean bean);
 
-        // 手指抬起
+        /**
+         *  手指抬起
+         */
+
         void onUp(View view, TagInfoBean bean);
 
-        // 点击了标签
+        /**
+         *  点击了标签
+         */
         void clickTag(View view, TagInfoBean bean);
 
-        // 在删除区域
+        /**
+         *  在删除区域
+         */
         void inDeleteRect(View view, TagInfoBean bean);
 
-        // 在滑动
+        /**
+         * 在滑动
+         *
+         * @param view
+         * @param bean
+         */
         void move(View view, TagInfoBean bean);
     }
 
@@ -353,10 +372,7 @@ public class TagTextView extends View {
         mTagGestureListener = tagClickListener;
     }
 
-    private boolean mCanMove = true; //可以被移动
 
-    private float tempX;
-    private float tempY;
     private GestureDetector.SimpleOnGestureListener mGestureListener = new GestureDetector.SimpleOnGestureListener() {
 
 
@@ -372,9 +388,6 @@ public class TagTextView extends View {
             //记录父容器和手机屏幕左上角的x和y的值
             tempX = e.getRawX() - e.getX() - TagTextView.this.getX();
             tempY = e.getRawY() - e.getY() - TagTextView.this.getY();
-            Log.e("zz", "onDown:初次 ss  == " + tempY );
-            Log.e("zz", "onScroll: mFirstDownX == " + mFirstDownX );
-            Log.e("zz", "onScroll: mFirstDownY == " + mFirstDownY );
             return mCenterRect.contains(e.getX(), e.getY()) || super.onDown(e);
         }
 
@@ -400,16 +413,9 @@ public class TagTextView extends View {
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            Log.e("zz", "onScroll: aaaaa" );
+
             //可以滑动编辑
             if (mCanMove) {
-                Log.e("zz", "onScroll: e2.getRawX() == " + e2.getRawX() );
-                Log.e("zz", "onScroll: e2.getRawY() == " + e2.getRawY() );
-                Log.e("zz", "onScroll: mFirstDownX == " + mFirstDownX );
-                Log.e("zz", "onScroll: mFirstDownY == " + mFirstDownY );
-                Log.e("zz", "onScroll:e2.getRawX() - mFirstDownX == " + (e2.getRawX() - mFirstDownY) );
-                Log.e("zz", "onScroll:e2.getRawY() - mFirstDownY == " + (e2.getRawY() - mFirstDownY) );
-
 
                 float positionX = e2.getRawX() - mFirstDownX - tempX;
                 float positionY = e2.getRawY() - mFirstDownY - tempY;
@@ -474,9 +480,7 @@ public class TagTextView extends View {
         }
         percentX = (((float) circleX) / parentWidth);
         percentY = (((float) circleY) / parentHeight);
-//        Log.e("zz", "meausePercent: parentx  ===  "+ getX() );
-//        Log.e("zz", "meausePercent: x == " + circleX + "  yy == " + circleY);
-//        Log.e("zz", "meausePercent: percentX == " + percentX + "   percentY == " + percentY);
+
         Log.e("zz", "圆点相关数据");
         Log.e("zz", "圆点坐标 x == "+ circleX+"  , y == " + circleY );
         Log.e("zz", "圆点在图片上的坐标比例  x  == "+ percentX +"  , y == " + percentY );
