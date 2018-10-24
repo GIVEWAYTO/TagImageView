@@ -9,26 +9,26 @@ package com.ken.tagimage;
 
 
 public class TagInfoBean {
-    private String name;  //标签内容
+    private String name;         //标签内容
     private int notesTagType;    //标签type
-    private String url;     //标签url
+    private String url;          //标签url
 
-    private double x;  //圆心x的占比
-    private double y;  //圆心y的占比
+    private double x;  //圆心x的在父控件位置 %
+    private double y;  //圆心y的在父控件位置 %
 
-    private float width;  //控件宽度
+    private float width;   //控件宽度
     private float height;  //控件高度
 
     private float picWidth;  //图片的宽度
     private float picHeight; //图片的高度
 
-    private int notesTagId; //标签id
+    private int notesTagId;  //标签id
 
     private boolean isLeft = true;  //圆点是否在左边
 
     private boolean isCanMove = true;  //标签是否可以移动
 
-    private int mIndex;    //用来记录在编辑标签中的index 位置
+    private int index;    //用来记录在编辑标签中的index 位置
 
     public void setCanMove(boolean canMove) {
         isCanMove = canMove;
@@ -128,11 +128,11 @@ public class TagInfoBean {
     }
 
     public void setIndex(int index) {
-        mIndex = index;
+        this.index = index;
     }
 
     public int getIndex() {
-        return mIndex;
+        return index;
     }
 
     @Override
@@ -150,7 +150,7 @@ public class TagInfoBean {
                 ", notesTagId=" + notesTagId +
                 ", isLeft=" + isLeft +
                 ", isCanMove=" + isCanMove +
-                ", mIndex=" + mIndex +
+                ", index=" + index +
                 '}';
     }
 }

@@ -118,7 +118,7 @@ public class TagImageView extends FrameLayout {
 
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    //记录当前点击的时间
+
                     mLastX = event.getX();
                     isClick = true;
                     break;
@@ -244,6 +244,7 @@ public class TagImageView extends FrameLayout {
 
         params.setMargins(left, top, 0, 0);
         final TagTextView child = new TagTextView(getContext(), bean);
+
         child.setTagGestureListener(tagClickListener);
         mContentLayout.addView(child, params);
     }

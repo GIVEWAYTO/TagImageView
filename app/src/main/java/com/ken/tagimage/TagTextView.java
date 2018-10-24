@@ -171,8 +171,7 @@ public class TagTextView extends View {
 
 
         mTextRoundRect.set(lineLong + mRadius, 0, lineLong + mRadius + mStokeWidth, 0 + mStokeHeight);
-        //边框圆角半径
-        mRoundX = Density.sp2px(getContext(), 100);
+
 
         //圆心y
         mCircleY = mStokeHeight / 2;
@@ -216,6 +215,13 @@ public class TagTextView extends View {
         widthMeasureSpec = MeasureSpec.makeMeasureSpec((int) (mRadius + lineLong + mStokeWidth), MeasureSpec.EXACTLY);
         heightMeasureSpec = MeasureSpec.makeMeasureSpec((int) mStokeHeight, MeasureSpec.EXACTLY);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        //边框圆角半径
+        mRoundX = h / 2;
     }
 
     @Override
@@ -289,7 +295,7 @@ public class TagTextView extends View {
         }
 
         super.onDraw(canvas);
-        meausePercent();
+
     }
 
     @Override
@@ -359,15 +365,19 @@ public class TagTextView extends View {
 
             if (mCanMove && mTagGestureListener != null)
                 mTagGestureListener.onDown(TagTextView.this, mTagInfoBean);
-
+       
             mFirstDownX = e.getX();
             mFirstDownY = e.getY();
 
             //记录父容器和手机屏幕左上角的x和y的值
             tempX = e.getRawX() - e.getX() - TagTextView.this.getX();
             tempY = e.getRawY() - e.getY() - TagTextView.this.getY();
+            Log.e("zz", "onDown:初次 ss  == " + tempY );
+            Log.e("zz", "onScroll: mFirstDownX == " + mFirstDownX );
+            Log.e("zz", "onScroll: mFirstDownY == " + mFirstDownY );
             return mCenterRect.contains(e.getX(), e.getY()) || super.onDown(e);
         }
+
 
 
         @Override
@@ -390,9 +400,17 @@ public class TagTextView extends View {
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-
+            Log.e("zz", "onScroll: aaaaa" );
             //可以滑动编辑
             if (mCanMove) {
+                Log.e("zz", "onScroll: e2.getRawX() == " + e2.getRawX() );
+                Log.e("zz", "onScroll: e2.getRawY() == " + e2.getRawY() );
+                Log.e("zz", "onScroll: mFirstDownX == " + mFirstDownX );
+                Log.e("zz", "onScroll: mFirstDownY == " + mFirstDownY );
+                Log.e("zz", "onScroll:e2.getRawX() - mFirstDownX == " + (e2.getRawX() - mFirstDownY) );
+                Log.e("zz", "onScroll:e2.getRawY() - mFirstDownY == " + (e2.getRawY() - mFirstDownY) );
+
+
                 float positionX = e2.getRawX() - mFirstDownX - tempX;
                 float positionY = e2.getRawY() - mFirstDownY - tempY;
 
