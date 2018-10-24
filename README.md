@@ -23,6 +23,32 @@
 
 ![](log.jpg)
 
+ 圆点相关数据
+
+ 圆点坐标 x == 348  , y == 825
+
+ 圆点在图片上的坐标百分比%  x  == 0.32222223  , y == 0.5729167
+
+ 圆点数据：
+
+	TagInfoBean{
+		name='￥55 粉色衣服',
+		notesTagType=3, 
+		url='tag点的链接url', 
+		x=0.3222222328186035, 
+		y=0.5729166865348816, 
+		width=1080.0, 
+		height=1440.0, 
+		picWidth=1010.0, 
+		picHeight=1324.0, 
+		notesTagId=652, 
+		isLeft=true, 
+		isCanMove=true, 
+		index=1
+	}
+
+
+
 ## Bean
 
     private String name;                  //标签内容
