@@ -112,6 +112,10 @@ public class TagTextView extends View {
 
     private void initView(Context context) {
         if (mTagInfoBean == null) return;
+        //在1+手机滑动时出现了残影   也有可能是硬件加速的问题
+       // setFadingEdgeLength(0);
+      //  setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+
         ovalPaint.setAntiAlias(true);
         ovalPaint.setStyle(Paint.Style.FILL);
         ovalPaint.setColor(Color.WHITE);
@@ -141,6 +145,7 @@ public class TagTextView extends View {
         //防止bitmap 变模糊
         ovalPaint.setFilterBitmap(true);
         ovalPaint.setAntiAlias(true);
+        ovalPaint.setStrokeWidth(Density.dip2px(getContext(),1));
         pfd = new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
         ovalPaint.setTextSize(Density.dip2px(context, 14));
         lineLong = Density.dip2px(context, 15);
@@ -216,8 +221,8 @@ public class TagTextView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        widthMeasureSpec = MeasureSpec.makeMeasureSpec((int) (mRadius + lineLong + mStokeWidth), MeasureSpec.EXACTLY);
-        heightMeasureSpec = MeasureSpec.makeMeasureSpec((int) mStokeHeight, MeasureSpec.EXACTLY);
+        widthMeasureSpec = MeasureSpec.makeMeasureSpec((int) (mRadius + lineLong + mStokeWidth +ovalPaint.getStrokeWidth() * 2), MeasureSpec.EXACTLY);
+        heightMeasureSpec = MeasureSpec.makeMeasureSpec((int) (mStokeHeight + ovalPaint.getStrokeWidth() * 2), MeasureSpec.EXACTLY);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
@@ -236,14 +241,14 @@ public class TagTextView extends View {
 
         //原点在左边
         if (isLeft) {
-            canvas.drawCircle(mRadius, mCircleY , mRadius, ovalPaint);
-            mTextRoundRect.set(lineLong + mRadius, 0, lineLong + mRadius + mStokeWidth,  mStokeHeight);
+            canvas.drawCircle(mRadius, mCircleY + ovalPaint.getStrokeWidth(), mRadius, ovalPaint);
+            mTextRoundRect.set(lineLong + mRadius, ovalPaint.getStrokeWidth(), lineLong + mRadius + mStokeWidth,  mStokeHeight + ovalPaint.getStrokeWidth() );
             //画边框遮罩
             canvas.drawRoundRect(mTextRoundRect, mRoundX, mRoundX, ovalPaint);
         } else {
-            mTextRoundRect.set(0, 0, mStokeWidth,  mStokeHeight);
+            mTextRoundRect.set(ovalPaint.getStrokeWidth(), ovalPaint.getStrokeWidth(), mStokeWidth + ovalPaint.getStrokeWidth(),  mStokeHeight + ovalPaint.getStrokeWidth());
 
-            canvas.drawCircle(mStokeWidth + lineLong, mCircleY , mRadius, ovalPaint);
+            canvas.drawCircle(mStokeWidth + lineLong, mCircleY+ ovalPaint.getStrokeWidth() , mRadius, ovalPaint);
             //画边框遮罩
             canvas.drawRoundRect(mTextRoundRect, mRoundX, mRoundX, ovalPaint);
         }
@@ -252,12 +257,12 @@ public class TagTextView extends View {
         ovalPaint.setColor(Color.WHITE);
 
         if (isLeft) {
-            canvas.drawCircle(mRadius, mCircleY , mInnerRadius, ovalPaint);
+            canvas.drawCircle(mRadius, mCircleY+ ovalPaint.getStrokeWidth() , mInnerRadius, ovalPaint);
 
             //画线
-            canvas.drawLine(mRadius,  mStokeHeight / 2, lineLong + mRadius,  mStokeHeight / 2, ovalPaint);
+            canvas.drawLine(mRadius,  mStokeHeight / 2 + ovalPaint.getStrokeWidth(), lineLong + mRadius,  mStokeHeight / 2 + ovalPaint.getStrokeWidth(), ovalPaint);
 
-            mTypeIconRect.set(lineLong + mRadius + leftPadding, mTopPadding, lineLong + mRadius + mIconWidth + leftPadding, mTopPadding + mIconWidth);
+            mTypeIconRect.set(lineLong + mRadius + leftPadding, mTopPadding +  ovalPaint.getStrokeWidth(), lineLong + mRadius + mIconWidth + leftPadding, mTopPadding + mIconWidth + +  ovalPaint.getStrokeWidth());
             //画标签类型icon
             canvas.drawBitmap(mBitmap, null, mTypeIconRect, ovalPaint);
 
@@ -275,14 +280,14 @@ public class TagTextView extends View {
             canvas.drawRoundRect(mTextRoundRect, mRoundX, mRoundX, ovalPaint);
 
         } else {
-            canvas.drawCircle(mStokeWidth + lineLong, mCircleY , mInnerRadius, ovalPaint);
+            canvas.drawCircle(mStokeWidth + lineLong, mCircleY + ovalPaint.getStrokeWidth(), mInnerRadius, ovalPaint);
 
-            mTypeIconRect.set(leftPadding, mTopPadding, mIconWidth + leftPadding, mTopPadding + mIconWidth);
+            mTypeIconRect.set(leftPadding, mTopPadding + ovalPaint.getStrokeWidth(), mIconWidth + leftPadding, mTopPadding + mIconWidth  +  ovalPaint.getStrokeWidth());
             //画标签类型icon
             canvas.drawBitmap(mBitmap, null, mTypeIconRect, ovalPaint);
 
             //画线
-            canvas.drawLine(mStokeWidth,  mStokeHeight / 2, mStokeWidth + lineLong,  mStokeHeight / 2, ovalPaint);
+            canvas.drawLine(mStokeWidth + ovalPaint.getStrokeWidth(),  mStokeHeight / 2 + ovalPaint.getStrokeWidth(), mStokeWidth + lineLong,  mStokeHeight / 2 + ovalPaint.getStrokeWidth(), ovalPaint);
 
             //文字
             mTextX = leftPadding + mIconWidth;
@@ -381,7 +386,7 @@ public class TagTextView extends View {
 
             if (mCanMove && mTagGestureListener != null)
                 mTagGestureListener.onDown(TagTextView.this, mTagInfoBean);
-       
+
             mFirstDownX = e.getX();
             mFirstDownY = e.getY();
 
@@ -473,13 +478,15 @@ public class TagTextView extends View {
         if (parentWidth == 0 || parentHeight == 0) return;
         if (isLeft) {
             circleX = (int) (getX() + mRadius);
-            circleY = (int) (getY() + mStokeHeight / 2);
+            circleY = (int) (getY() + mStokeHeight / 2 + ovalPaint.getStrokeWidth());
         } else {
-            circleX = (int) (getX() + mStokeWidth + lineLong);
-            circleY = (int) (getY() + mStokeHeight / 2);
+            circleX = (int) (getX() + mStokeWidth + lineLong + ovalPaint.getStrokeWidth() );
+            circleY = (int) (getY() + mStokeHeight / 2 + ovalPaint.getStrokeWidth());
         }
         percentX = (((float) circleX) / parentWidth);
         percentY = (((float) circleY) / parentHeight);
+
+
 
         Log.e("zz", "圆点相关数据");
         Log.e("zz", "圆点坐标 x == "+ circleX +"  , y == " + circleY );

@@ -211,7 +211,6 @@ public class TagImageView extends FrameLayout {
             }
             bean.setIndex(num++);
             createTags(bean);
-
         }
     }
 
