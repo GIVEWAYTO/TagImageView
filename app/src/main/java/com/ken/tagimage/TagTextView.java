@@ -201,7 +201,7 @@ public class TagTextView extends View {
 
         //手势监听
         mGestureDetector = new GestureDetectorCompat(context, mGestureListener);
-
+        mGestureDetector.setIsLongpressEnabled(false);
         parentWidth = rightBorder;
         parentHeight = (int) mTagInfoBean.getHeight();
 
@@ -456,10 +456,6 @@ public class TagTextView extends View {
 
         }
 
-        @Override
-        public void onLongPress(MotionEvent e) {
-            super.onLongPress(e);
-        }
 
     };
 

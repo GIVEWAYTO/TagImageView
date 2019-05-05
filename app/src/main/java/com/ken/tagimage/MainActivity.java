@@ -39,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
         tag_view.setAddTagListener(new TagImageView.AddTagListener() {
             @Override
             public void addTag(String path, double rawX, double rawY) {
+
+
                 final TagInfoBean bean = new TagInfoBean();
                 bean.setCanMove(true);
                 bean.setNotesTagId(652);
@@ -62,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
                             tabName = "女孩";
                         bean.setName(tabName);
                         Log.e("zz", "onClick: "+bean.getName() + "  " + imageH );
+
+
                         tag_view.addTag(bean);
                     }
                 });

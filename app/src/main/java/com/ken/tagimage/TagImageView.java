@@ -5,6 +5,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -112,12 +113,16 @@ public class TagImageView extends FrameLayout {
 
 
     float mLastX;
+    float downX;
+    float downY;
     OnTouchListener onTouchListener = new OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
 
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
+                     downX = event.getRawX();
+                     downY = event.getRawY();
 
                     mLastX = event.getX();
                     isClick = true;
@@ -127,7 +132,7 @@ public class TagImageView extends FrameLayout {
                         double rawX = event.getRawX();
                         double rawY = event.getRawY();
 
-                        mAddTagListener.addTag(mPath, rawX, rawY);
+                        mAddTagListener.addTag(mPath, downX, downY);
                     }
 
                     break;
