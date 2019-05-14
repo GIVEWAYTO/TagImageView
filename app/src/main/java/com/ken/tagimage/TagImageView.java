@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.CycleInterpolator;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
@@ -62,6 +63,8 @@ public class TagImageView extends FrameLayout {
         mOvalPaint.setTextSize(Density.sp2px(context, 14));
         mOvalPaint.setStrokeWidth(Density.dip2px(context, 1));
         mOvalPaint.setFilterBitmap(true);
+
+
 
         //滑动
         mContentLayout.setOnTouchListener(onTouchListener);

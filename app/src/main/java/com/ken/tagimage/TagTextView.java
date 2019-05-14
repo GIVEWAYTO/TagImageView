@@ -202,6 +202,7 @@ public class TagTextView extends View {
         //手势监听
         mGestureDetector = new GestureDetectorCompat(context, mGestureListener);
         mGestureDetector.setIsLongpressEnabled(false);
+
         parentWidth = rightBorder;
         parentHeight = (int) mTagInfoBean.getHeight();
 
@@ -309,7 +310,11 @@ public class TagTextView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (mCanMove && mTagGestureListener != null && event.getAction() == MotionEvent.ACTION_UP) {
+        if(event.getAction() == MotionEvent.ACTION_UP){
+            Log.e("zz","无判断条件ACTION_UP");
+        }
+        if (event.getAction() == MotionEvent.ACTION_UP && mCanMove && mTagGestureListener != null ) {
+            Log.e("zz","有判断条件ACTION_UP");
             mTagGestureListener.onUp(this, mTagInfoBean);
 
             float positionX = event.getRawX() - mFirstDownX - tempX;
